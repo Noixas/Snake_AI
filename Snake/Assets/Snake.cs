@@ -30,13 +30,11 @@ public class Snake : MonoBehaviour
     void OnTriggerEnter2D(Collider2D coll)
     {
         // Food?
-        if (coll.name.StartsWith("FoodPrefab"))
+        if (coll.name.StartsWith("Food"))
         {
             // Get longer in next Move call
             ate = true;
-
-            // Remove the Food
-            Destroy(coll.gameObject);
+            manager.RelocateFood();
         }
         // Collided with Tail or Border
         else
@@ -44,13 +42,19 @@ public class Snake : MonoBehaviour
             // ToDo 'You lose' screen
         }
     }
+    
     private void Move()
     {
         Vector2 v = transform.position;
         transform.Translate(direction);
-       // manager.Move(direction.normalized);
+        // manager.Move(direction.normalized);
         // Do we have a Tail?
-        if (tail.Count > 0)
+        if (ate)
+        {
+            manager.increase_size(v);
+            ate = false;
+        }
+        else if (tail.Count > 0)
         {
             // Move last Tail Element to where the Head was
             tail.Last().position = v;
