@@ -536,7 +536,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &326215166
 Transform:
   m_ObjectHideFlags: 0
@@ -711,7 +711,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 2076626818}
   snake_dad: {fileID: 562358310}
-  snake_head: {fileID: 1708429875}
+  snake_head: {fileID: 3001725086669808275, guid: daa7d4ea13c94894b988c5e6ef23e56f,
+    type: 3}
   wall: {fileID: 6766730176642275419, guid: ed91a7f8855982e47930300fbd045a9f, type: 3}
   tail: {fileID: 7471798193443265467, guid: b2125d860b64e354eb212679ea1da413, type: 3}
 --- !u!1 &809720495
@@ -1778,7 +1779,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1708429872
 BoxCollider2D:
   m_ObjectHideFlags: 0
