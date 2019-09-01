@@ -12,7 +12,7 @@ public class Snake : MonoBehaviour
     private Field_Manager manager;
     void Start()
     {
-        InvokeRepeating("Move", 0.3f, 0.3f);
+        //InvokeRepeating("Move", 0.3f, 0.3f);
     }
 
     // Update is called once per frame
@@ -34,36 +34,42 @@ public class Snake : MonoBehaviour
         {
             // Get longer in next Move call
             ate = true;
-            manager.RelocateFood();
+            //manager.RelocateFood();
         }
         // Collided with Tail or Border
         else
         {
-            CancelInvoke("Move");
+         //   CancelInvoke("Move");
                 // ToDo 'You lose' screen
         }
     }
     
     private void Move()
     {
-        Vector2 v = transform.position;
-        transform.Translate(direction);
-        manager.Move(direction.normalized);
+
+        Vector2 preMovePos = transform.position;
+        bool canMove = manager.Move(direction.normalized);
+        if (canMove == false) {
+            CancelInvoke("Move");
+            canMove = true;
+            return;
+        }     
         // Do we have a Tail?
         if (ate)
         {
-            manager.increase_size(v);
+            //manager.increase_size(preMovePos);
             ate = false;
         }
         else if (tail.Count > 0)
         {
             // Move last Tail Element to where the Head was
-            tail.Last().position = v;
+            tail.Last().position = preMovePos;
 
             // Add to front of list, remove from the back
             tail.Insert(0, tail.Last());
             tail.RemoveAt(tail.Count - 1);
         }
+        transform.Translate(direction);
     }
     public void set_manager(Field_Manager mang)
     {
