@@ -71,14 +71,14 @@ public class Field_Manager : MonoBehaviour {
     public void RelocateFood() {
         int w = rnd.Next(1, width - 1 );
         int h = rnd.Next(1, height - 1);
-        //todo: check if is in body of snake
+        //Check if is in body of snake
+        while (field[height - h - 1, w] != 0) {
+            w = rnd.Next(1, width - 1);
+            h = rnd.Next(1, height - 1);
+        }
         food.position = new Vector3((w - width * 0.5f) * block_scale,
             (h - height * 0.5f) * block_scale, food.position.z);
         field[height-h -1, w] = 5;
-        Instantiate(food, new Vector3((w - width * 0.5f) * block_scale,
-            (h - height * 0.5f) * block_scale, food.position.z), food.rotation);
-        Debug.Log(h + "LOL " + w);
-        //foodPos = new Vector2Int(h, w);
     }
     public void Increase_size()
     {

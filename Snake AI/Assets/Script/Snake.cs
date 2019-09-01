@@ -12,7 +12,7 @@ public class Snake : MonoBehaviour
     private Field_Manager manager;
     void Start()
     {
-        //InvokeRepeating("Move", 0.3f, 0.3f);
+        InvokeRepeating("Move", 0.3f, 0.3f);
     }
 
     // Update is called once per frame
