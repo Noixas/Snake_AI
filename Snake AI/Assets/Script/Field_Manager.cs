@@ -10,16 +10,18 @@ public class Field_Manager : MonoBehaviour {
     public Transform wall;
     public Transform tail;
     private Snake snake;
+    public TMPro.TextMeshProUGUI score;
+    public TMPro.TextMeshProUGUI time;
     Queue<Vector2> last_tail = new Queue<Vector2>();
+    Vector2 last_dir = Vector2.zero;
     Vector2 head;//height, width 
     float block_scale = .32f;
     int width = 64;
     int height = 32;
     Boolean fed = false;
-    // public Transform snake_tail;
     private int[,] field;
     private System.Random rnd;
-    private Vector2Int foodPos = new Vector2Int();
+
     // Start is called before the first frame update
     void Start() {
         rnd = new System.Random();
@@ -30,6 +32,70 @@ public class Field_Manager : MonoBehaviour {
         print_array(field);
 
     }
+    // Update is called once per frame
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            print_array(field);
+        }
+        time.SetText(Time.time.ToString("F2"));
+
+    }
+
+   
+    public void RelocateFood() {
+        int w = rnd.Next(1, width - 1 );
+        int h = rnd.Next(1, height - 1);
+        //Check if is in body of snake
+        while (field[height - h - 1, w] != 0) {
+            w = rnd.Next(1, width - 1);
+            h = rnd.Next(1, height - 1);
+        }
+        food.position = new Vector3((w - width * 0.5f) * block_scale,
+            (h - height * 0.5f) * block_scale, food.position.z);
+        field[height-h -1, w] = 5;
+    }
+    public void Increase_size()
+    {
+        //(j - width * 0.5f) * block_scale,(i - height * 0.5f) * block_scale, 1
+        Vector3 pos = new Vector3(snake_head.position.x, 
+            snake_head.position.y, snake_head.position.z);
+        Transform t1 = Instantiate(tail, pos, snake_head.rotation);
+        Debug.Log(t1.position);
+        snake.tail.Insert(0,t1);
+        fed = true;
+    }
+    public bool Move(Vector2 pDir) {
+        if (CheckForWallsAndTail(pDir)) {            
+            return false;
+        } else if (CheckForFood(pDir)) {
+            //Manage food and growth before moving! Order matters.
+            Increase_size();
+            RelocateFood();            
+            IncreaseScore();
+        }
+
+        MoveHead(pDir);
+
+        if (!fed) { //If we get food then avoid erasing last tail
+            Vector2 tail_pos = last_tail.Dequeue();
+            field[(int)tail_pos.x, (int)tail_pos.y] = 0;
+        }            
+        
+        fed = false;
+        print_array(field);
+        return true;
+    }
+    private void MoveHead(Vector2 pDir) {
+        last_tail.Enqueue(new Vector2(head.x, head.y));
+        field[(int)head.x, (int)head.y] = 2; //Add tail at prev pos of head
+
+        head.x -= pDir.y; //If is going up in real world then have to substract to go up in array
+        head.y += pDir.x;
+        field[(int)head.x, (int)head.y] = 3; //Add head
+    }
+    /// <summary>
+    /// Create stuff
+    /// </summary>
     private void CreateSnake() {
         snake_head = Instantiate(snake_head, new Vector3(0, 0, 1),
             Quaternion.identity, snake_dad);
@@ -68,53 +134,17 @@ public class Field_Manager : MonoBehaviour {
             }
         }
     }
-    public void RelocateFood() {
-        int w = rnd.Next(1, width - 1 );
-        int h = rnd.Next(1, height - 1);
-        //Check if is in body of snake
-        while (field[height - h - 1, w] != 0) {
-            w = rnd.Next(1, width - 1);
-            h = rnd.Next(1, height - 1);
-        }
-        food.position = new Vector3((w - width * 0.5f) * block_scale,
-            (h - height * 0.5f) * block_scale, food.position.z);
-        field[height-h -1, w] = 5;
-    }
-    public void Increase_size()
-    {
-        //(j - width * 0.5f) * block_scale,(i - height * 0.5f) * block_scale, 1
-        Vector3 pos = new Vector3((head.x - width * 0.5f)*block_scale, 
-           (head.y - height * 0.5f)*block_scale, 1);
-        Transform t1 = Instantiate(tail, pos, snake_head.rotation);
-        Debug.Log(t1.position);
-        snake.tail.Insert(0,t1);
-    }
-    public bool Move(Vector2 pDir) {
-        if (CheckForWalls(pDir)) {
-            Debug.Log("There is a wall, cant move");
-            return false;
-        } else if (CheckForFood(pDir)) {
-            Increase_size();
-            RelocateFood();
-            fed = true;
-        }
-        last_tail.Enqueue(new Vector2(head.x, head.y));
-        field[(int)head.x, (int)head.y] = 2;
-        head.x -= pDir.y; //If is going up in real world then have to substract to go up in array
-        head.y += pDir.x;
-        field[(int)head.x, (int)head.y] = 3;
-        if (!fed) { //If we get food then avoid erasing last tail
-            Vector2 tail_pos = last_tail.Dequeue();
-            field[(int)tail_pos.x, (int)tail_pos.y] = 0;
-        }             
-        fed = false;
-        print_array(field);
-        return true;
-    }
-    private bool CheckForWalls(Vector2 pDir) {
+
+    /// <summary>
+    /// Checks
+    /// </summary>
+    /// <param name="pDir"></param>
+    /// <returns></returns>
+    private bool CheckForWallsAndTail(Vector2 pDir) {
         Vector2 nextMove = new Vector2(head.x - pDir.y, head.y + pDir.x);
-        if (field[(int)nextMove.x, (int)nextMove.y] == 9) {
-            return true; //there is a wall
+        if (field[(int)nextMove.x, (int)nextMove.y] == 9 || field[(int)nextMove.x, (int)nextMove.y] == 2) {
+            Debug.Log("There is a wall, cant move");
+            return true; //there is a wall or tail, game over.
         } else return false;
     }
     private bool CheckForFood(Vector2 pDir) {
@@ -123,12 +153,20 @@ public class Field_Manager : MonoBehaviour {
             return true; //there is a wall
         } else return false;
     }
-    // Update is called once per frame
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            print_array(field);
+
+    
+    /// <summary>
+    /// Text stuff
+    /// </summary>
+    /// <param name="typef"></param>
+    private void IncreaseScore(int typef = 0) {
+        if(typef == 0) {
+            int scoreInt = Int32.Parse(score.GetParsedText());
+            scoreInt += 100;
+            score.SetText(""+scoreInt);
         }
     }
+    
     void print_array(int[,] arra)
     {
         string linea = "";

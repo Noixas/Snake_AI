@@ -10,8 +10,8 @@ public class Snake : MonoBehaviour
     public List<Transform> tail = new List<Transform>();
     bool ate = false;
     private Field_Manager manager;
-    void Start()
-    {
+    Vector2 last_dir = Vector2.zero;
+    void Start(){
         InvokeRepeating("Move", 0.3f, 0.3f);
     }
 
@@ -27,49 +27,37 @@ public class Snake : MonoBehaviour
         else if (Input.GetKey(KeyCode.UpArrow))
             direction = Vector2.up * 0.32f;
     }
-    void OnTriggerEnter2D(Collider2D coll)
-    {
+    void OnTriggerEnter2D(Collider2D coll){
         // Food?
-        if (coll.name.StartsWith("Food"))
-        {
+        if (coll.name.StartsWith("Food")){
             // Get longer in next Move call
             ate = true;
-            //manager.RelocateFood();
-        }
-        // Collided with Tail or Border
-        else
-        {
-         //   CancelInvoke("Move");
-                // ToDo 'You lose' screen
         }
     }
     
     private void Move()
     {
+        //Check if going backwards
+        if (-last_dir.normalized == direction.normalized)
+            direction = last_dir;
 
         Vector2 preMovePos = transform.position;
-        bool canMove = manager.Move(direction.normalized);
-        if (canMove == false) {
+        if (manager.Move(direction.normalized) == false) {
             CancelInvoke("Move");
-            canMove = true;
             return;
         }     
-        // Do we have a Tail?
-        if (ate)
-        {
-            //manager.increase_size(preMovePos);
+
+        
+        if (ate){            
             ate = false;
         }
-        else if (tail.Count > 0)
-        {
-            // Move last Tail Element to where the Head was
-            tail.Last().position = preMovePos;
-
-            // Add to front of list, remove from the back
-            tail.Insert(0, tail.Last());
+        else if (tail.Count > 0) { // Do we have a Tail?            
+            tail.Last().position = preMovePos;// Move last Tail part to where the Head was.
+            tail.Insert(0, tail.Last()); // Add to front of list, remove from the back
             tail.RemoveAt(tail.Count - 1);
         }
         transform.Translate(direction);
+        last_dir = direction;
     }
     public void set_manager(Field_Manager mang)
     {

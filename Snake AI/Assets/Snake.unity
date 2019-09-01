@@ -716,6 +716,8 @@ MonoBehaviour:
     type: 3}
   wall: {fileID: 6766730176642275419, guid: ed91a7f8855982e47930300fbd045a9f, type: 3}
   tail: {fileID: 1053322383}
+  score: {fileID: 302262646}
+  time: {fileID: 1410713436}
 --- !u!1 &809720495
 GameObject:
   m_ObjectHideFlags: 0
@@ -2317,12 +2319,12 @@ PrefabInstance:
     - target: {fileID: 2386596991826570581, guid: d7b04a4120484fb4ab95d8a5c9e294f5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.666
+      value: -111
       objectReference: {fileID: 0}
     - target: {fileID: 2386596991826570581, guid: d7b04a4120484fb4ab95d8a5c9e294f5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.1359999
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 2386596991826570581, guid: d7b04a4120484fb4ab95d8a5c9e294f5,
         type: 3}
