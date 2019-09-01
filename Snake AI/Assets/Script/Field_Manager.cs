@@ -44,13 +44,13 @@ public class Field_Manager : MonoBehaviour
         snake.tail.Add(t2);
 
         //Add snake elemtns to array
-        field[height / 2 + 1, width / 2] = 2; //tail
-        field[height / 2 + 2,  width / 2] = 2; //tail
-        field[height / 2 + 0,  width / 2] = 3; //head
+        field[height / 2 + 0, width / 2] = 2; //tail
+        field[height / 2 + 1,  width / 2] = 2; //tail
+        field[height / 2 - 1,  width / 2] = 3; //head
 
-        head = new Vector2(height / 2, width / 2);
-        last_tail.Enqueue(new Vector2(height / 2 + 2, width / 2));
+        head = new Vector2(height / 2 - 1, width / 2);
         last_tail.Enqueue(new Vector2(height / 2 + 1, width / 2));
+        last_tail.Enqueue(new Vector2(height / 2 + 0, width / 2));
     }
     /// <summary>
     /// 9 is wall
