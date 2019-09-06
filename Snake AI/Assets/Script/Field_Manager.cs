@@ -10,7 +10,7 @@ public class Field_Manager : MonoBehaviour {
     public Transform snake_head;
     public Transform wall;
     public Transform tail;
-    private Snake snake;
+    private SnakeAgent snake;
     public TMPro.TextMeshProUGUI score;
     public TMPro.TextMeshProUGUI time;
     Queue<Vector2> last_tail = new Queue<Vector2>();
@@ -23,15 +23,17 @@ public class Field_Manager : MonoBehaviour {
     private int[,] field;
     private System.Random rnd;
 
+    private Vector2 food_pos;
+
     // Start is called before the first frame update
     void Start() {
         rnd = new System.Random();
         field = new int[height, width];
         CreateWalls();
         CreateSnake();
-        RelocateFood();
         print_array(field);
         food = Instantiate(food, this.transform);
+        RelocateFood();
     }
     // Update is called once per frame
     void Update() {
@@ -53,15 +55,16 @@ public class Field_Manager : MonoBehaviour {
         food.position = new Vector3((w - width * 0.5f) * block_scale,
             (h - height * 0.5f) * block_scale, food.position.z);
         field[height-h -1, w] = 5;
+        food_pos = new Vector2(height - h - 1, w);
     }
+
+    public Observations getObservations() {
+        return new Observations(field,head, food_pos);
+    }
+
     public void Increase_size()
     {
-        //(j - width * 0.5f) * block_scale,(i - height * 0.5f) * block_scale, 1
-        Vector3 pos = new Vector3(snake_head.position.x, 
-            snake_head.position.y, snake_head.position.z);
-        Transform t1 = Instantiate(tail, pos, snake_head.rotation,snake_dad);
-        Debug.Log(t1.position);
-        snake.tail.Insert(0,t1);
+        snake_dad.GetComponent<SnakeAgent>().IncreaseSize();
         fed = true;
     }
     public bool Move(Vector2 pDir) {
@@ -97,17 +100,18 @@ public class Field_Manager : MonoBehaviour {
     /// Create stuff
     /// </summary>
     private void CreateSnake() {
-        snake_head = Instantiate(snake_head, new Vector3(0, 0, 1),
-            Quaternion.identity, snake_dad);
-        snake = snake_head.GetComponent<Snake>();
-        snake.tail = new List<Transform>();
-        snake.set_manager(this);
-        Transform t1 = Instantiate(tail, new Vector3(0, -1 * block_scale, 1),
-            Quaternion.identity, snake_dad);
-        Transform t2 = Instantiate(tail, new Vector3(0, -2 * block_scale, 1),
-            Quaternion.identity, snake_dad);
-        snake.tail.Add(t1);
-        snake.tail.Add(t2);
+        //snake_head = Instantiate(snake_head, new Vector3(0, 0, 1),
+        //    Quaternion.identity, snake_dad);
+        snake = snake_dad.GetComponent<SnakeAgent>();
+        snake.CreateSnake();
+        //snake.tail = new List<Transform>();
+        //snake.set_manager(this);
+        //Transform t1 = Instantiate(tail, new Vector3(0, -1 * block_scale, 1),
+        //    Quaternion.identity, snake_dad);
+        //Transform t2 = Instantiate(tail, new Vector3(0, -2 * block_scale, 1),
+        //    Quaternion.identity, snake_dad);
+        //snake.tail.Add(t1);
+        //snake.tail.Add(t2);
 
         //Add snake elemtns to array
         field[height / 2 + 0, width / 2] = 2; //tail

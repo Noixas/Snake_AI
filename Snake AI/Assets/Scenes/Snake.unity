@@ -472,6 +472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 562358310}
+  - component: {fileID: 562358311}
   m_Layer: 0
   m_Name: Snake Dad
   m_TagString: Untagged
@@ -494,6 +495,33 @@ Transform:
   m_Father: {fileID: 1941529497}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &562358311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562358309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690908ec34d95674da4537c4a2cfc800, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 11400000, guid: f8fb52e2072e2c34e96fa37d2ab78dae, type: 2}
+  agentParameters:
+    agentCameras: []
+    agentRenderTextures: []
+    maxStep: 0
+    resetOnDone: 1
+    onDemandDecision: 0
+    numberOfActionsBetweenDecisions: 10
+  tail_part: {fileID: 7471798193443265467, guid: b2125d860b64e354eb212679ea1da413,
+    type: 3}
+  head_prefab: {fileID: 3001725086669808275, guid: daa7d4ea13c94894b988c5e6ef23e56f,
+    type: 3}
+  parent: {fileID: 0}
+  tail: []
+  manager: {fileID: 589512077}
 --- !u!1 &589512075
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,6 +577,70 @@ MonoBehaviour:
   tail: {fileID: 7471798193443265467, guid: b2125d860b64e354eb212679ea1da413, type: 3}
   score: {fileID: 302262646}
   time: {fileID: 1410713436}
+--- !u!1 &753918117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 753918119}
+  - component: {fileID: 753918118}
+  m_Layer: 0
+  m_Name: Academy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &753918118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753918117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad74721d56653f4b9e6225657e389b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  broadcastHub:
+    broadcastingBrains:
+    - {fileID: 11400000, guid: f8fb52e2072e2c34e96fa37d2ab78dae, type: 2}
+    - {fileID: 11400000, guid: 78e104a5abea1bd43bf63ef2310f10dd, type: 2}
+    _brainsToControl:
+    - {fileID: 11400000, guid: f8fb52e2072e2c34e96fa37d2ab78dae, type: 2}
+  maxSteps: 0
+  trainingConfiguration:
+    width: 80
+    height: 80
+    qualityLevel: 1
+    timeScale: 100
+    targetFrameRate: -1
+  inferenceConfiguration:
+    width: 1280
+    height: 720
+    qualityLevel: 5
+    timeScale: 1
+    targetFrameRate: 60
+  resetParameters:
+    resetParameters: []
+--- !u!4 &753918119
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753918117}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.9690633, y: 1.2375727, z: -20.140625}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &916070401
 GameObject:
   m_ObjectHideFlags: 0
