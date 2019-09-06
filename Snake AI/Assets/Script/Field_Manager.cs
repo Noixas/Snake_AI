@@ -31,7 +31,7 @@ public class Field_Manager : MonoBehaviour {
         CreateSnake();
         RelocateFood();
         print_array(field);
-
+        food = Instantiate(food, this.transform);
     }
     // Update is called once per frame
     void Update() {
@@ -41,7 +41,6 @@ public class Field_Manager : MonoBehaviour {
         time.SetText(Time.time.ToString("F2"));
 
     }
-
    
     public void RelocateFood() {
         int w = rnd.Next(1, width - 1 );
