@@ -1,0 +1,87 @@
+{
+  "name": "root",
+  "gauges": [
+    {
+      "name": "SnakeBrain.mean_reward",
+      "value": 6250058870.705933,
+      "min": 51332.20607164171,
+      "max": 6250058870.705933,
+      "count": 5
+    }
+  ],
+  "total": 81.9963403,
+  "count": 1,
+  "self": 9.132736600000143,
+  "children": [
+    {
+      "name": "TrainerController.advance",
+      "total": 72.86360369999986,
+      "count": 5654,
+      "self": 2.8377029999998484,
+      "children": [
+        {
+          "name": "env_step",
+          "total": 70.02590070000001,
+          "count": 5654,
+          "self": 66.85384979999961,
+          "children": [
+            {
+              "name": "SubprocessEnvManager._take_step",
+              "total": 3.119567800000306,
+              "count": 5654,
+              "self": 0.09634990000031163,
+              "children": [
+                {
+                  "name": "PPOPolicy.evaluate",
+                  "total": 3.0232178999999944,
+                  "count": 5654,
+                  "self": 3.0232178999999944
+                }
+              ]
+            },
+            {
+              "name": "workers",
+              "total": 0.052483100000086935,
+              "count": 5654,
+              "self": 0.0,
+              "children": [
+                {
+                  "name": "worker_root",
+                  "total": 78.11384400000028,
+                  "count": 5654,
+                  "is_parallel": true,
+                  "self": 14.446486200000088,
+                  "children": [
+                    {
+                      "name": "UnityEnvironment.step",
+                      "total": 63.6673578000002,
+                      "count": 5654,
+                      "is_parallel": true,
+                      "self": 1.3186484999998882,
+                      "children": [
+                        {
+                          "name": "UnityEnvironment._generate_step_input",
+                          "total": 0.24527590000024801,
+                          "count": 5654,
+                          "is_parallel": true,
+                          "self": 0.24527590000024801
+                        },
+                        {
+                          "name": "communicator.exchange",
+                          "total": 62.10343340000006,
+                          "count": 5654,
+                          "is_parallel": true,
+                          "self": 62.10343340000006
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

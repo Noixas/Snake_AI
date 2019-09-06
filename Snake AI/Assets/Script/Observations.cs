@@ -3,12 +3,14 @@ using UnityEngine;
 using System.Linq;
 public struct Observations {
 
+    public float time;
     public Vector2 position_head;
     public Vector2 position_food;
     public List<Vector2> position_tail;
     public List<Vector2> position_empty;
     public List<Vector2> position_walls;
-    public Observations(int[,] field, Vector2 head, Vector2 food) {
+    public Observations(int[,] field, Vector2 head, Vector2 food, float pTime) {
+        time = pTime;
         position_head = head;
         position_food = food;
         position_tail = new List<Vector2>();

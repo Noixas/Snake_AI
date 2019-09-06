@@ -13,16 +13,19 @@ public class SnakeAgent : Agent
     public List<Transform> tail = new List<Transform>();
     private Transform head;
     public Field_Manager manager = null;
-
+    private float prevDist = 100000;
     const float BLOCKSCALE = .32f;
     //Manage the visual/colliders version of the snake 
     private Vector2 direction = Vector2.up * 0.32f;
     Vector2 last_dir = Vector2.zero;
     private bool lost = false;
     private bool ate = false;
-
+    private bool close = false;
     void Start() {
         InvokeRepeating("Move", 0.3f, 0.3f);
+    }
+    private void Update() {
+        Debug.Log(direction);
     }
     private void Move() {
         //Check if going backwards
@@ -31,7 +34,7 @@ public class SnakeAgent : Agent
 
         Vector2 preMovePos = head.position;
         if (manager.Move(direction.normalized) == false) {
-            CancelInvoke("Move");
+            lost = true;
             return;
         }
 
@@ -69,32 +72,40 @@ public class SnakeAgent : Agent
         Transform t1 = Instantiate(tail_part, pos, head.rotation, this.transform);
         Debug.Log(t1.position);
         tail.Insert(0, t1);
+        ate = true;
     }
 
     public override void AgentReset() {
         if (lost) {
-            last_dir = Vector2.zero;
+            last_dir = Vector2.up * 0.32f;
             lost = false;
             ate = false;
+            foreach(Transform t in tail) {
+                Destroy(t.gameObject);
+            }
+            Destroy(head.gameObject);
             tail.Clear();
-            CreateSnake();
 
+            manager.RestartField();
         }
     }
     public override void CollectObservations() {
         // Target and Agent positions
         Observations obs = manager.getObservations();
-        AddVectorObs(obs.position_head);
-        AddVectorObs(obs.position_food);
-        foreach (Vector2 v in obs.position_tail) {
-            AddVectorObs(v);
-        }
-        foreach (Vector2 v in obs.position_walls) {
-            AddVectorObs(v);
-        }
-        foreach (Vector2 v in obs.position_empty) {
-            AddVectorObs(v);
-        }
+
+        //AddVectorObs(obs.position_head);
+        //AddVectorObs(obs.position_food);
+        AddVectorObs(direction);        
+        AddVectorObs(Vector2.Distance(obs.position_food, obs.position_head));
+        //foreach (Vector2 v in obs.position_tail) {
+        //    AddVectorObs(v);
+        //}
+        //foreach (Vector2 v in obs.position_walls) {
+        //    AddVectorObs(v);
+        //}
+        //foreach (Vector2 v in obs.position_empty) {
+        //    AddVectorObs(v);
+        //}
     }
 
 
@@ -110,17 +121,51 @@ public class SnakeAgent : Agent
             direction = -Vector2.right * 0.32f; // '-right' means 'left'
         else if (vectorAction[1] > 0)
             direction = Vector2.up * 0.32f;
-
+        Observations obs = manager.getObservations();
+        //AddReward(100- Vector2.Distance(obs.position_food, obs.position_head)*0.0001f);
+        //AddReward();
         // Rewards
         // Reached target
         if (ate) {
-            SetReward(1.0f);
+            SetReward(40 + GetReward());
             Done();
         }
-
+        //tood add time reward
+        float dist = Vector2.Distance(obs.position_food, obs.position_head);
+        if(dist < 15) {
+            close = true;
+        }
+        if (close && dist > prevDist) {
+            SetReward(-1 + 0.90f / dist + GetReward());
+            Debug.Log("Dist " + dist);
+            Done();
+        } else if (dist < prevDist) {
+            prevDist = dist;
+            AddReward(.001f + 0.1f /dist);
+        } else { 
+            prevDist = dist;
+        }
         // Fell off platform
         if (lost) {
+            if (dist < .5f) {
+                AddReward(.7f);
+            } else if (dist < 1) {
+                AddReward(.5f);
+            } else if (dist < 2) {
+                AddReward(.3f);
+            } else if (dist < 5) {
+                AddReward(.1f);
+            } else if (dist < 15) {
+                AddReward(.0015f);
+            } else if (dist < 30) {
+                AddReward(.0005f);
+            } else {
+                AddReward(-10);
+            }
+            SetReward(GetReward());
+            //SetReward(0);
             Done();
+            //AddReward(90 - Vector2.Distance(obs.position_food, obs.position_head));
         }
 
     }

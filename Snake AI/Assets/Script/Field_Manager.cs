@@ -25,6 +25,8 @@ public class Field_Manager : MonoBehaviour {
 
     private Vector2 food_pos;
 
+
+    private float start_time;
     // Start is called before the first frame update
     void Start() {
         rnd = new System.Random();
@@ -34,6 +36,7 @@ public class Field_Manager : MonoBehaviour {
         print_array(field);
         food = Instantiate(food, this.transform);
         RelocateFood();
+        start_time = Time.time;
     }
     // Update is called once per frame
     void Update() {
@@ -43,7 +46,21 @@ public class Field_Manager : MonoBehaviour {
         time.SetText(Time.time.ToString("F2"));
 
     }
-   
+   public void RestartField() {
+        field = new int[height, width];
+        for (int i = 0; i < field.GetLength(0); i++) {
+            for (int j = 0; j < field.GetLength(1); j++) {
+                if (i == 0 || i == field.GetLength(0) - 1 || j == 0
+                    || j == field.GetLength(1) - 1) {
+                    field[i, j] = 9; //wall
+                }
+            }
+        }
+        start_time = Time.time;
+        last_tail = new Queue<Vector2>();
+        RelocateFood();
+        CreateSnake();
+    }
     public void RelocateFood() {
         int w = rnd.Next(1, width - 1 );
         int h = rnd.Next(1, height - 1);
@@ -59,7 +76,7 @@ public class Field_Manager : MonoBehaviour {
     }
 
     public Observations getObservations() {
-        return new Observations(field,head, food_pos);
+        return new Observations(field,head, food_pos, Time.time-start_time);
     }
 
     public void Increase_size()
@@ -185,3 +202,4 @@ public class Field_Manager : MonoBehaviour {
         Debug.Log(linea);
     }
 }
+//TODO: Reset manager when reseting snake

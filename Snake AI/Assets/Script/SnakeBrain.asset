@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SnakeBrain
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 4096
+    vectorObservationSize: 4097
     numStackedVectorObservations: 1
     vectorActionSize: 0200000002000000
     cameraResolutions: []
