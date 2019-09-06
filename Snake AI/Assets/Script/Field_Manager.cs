@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 
 public class Field_Manager : MonoBehaviour {
+    public Transform wall_parent;
     public Transform food;
     public Transform snake_dad;
     public Transform snake_head;
@@ -59,7 +60,7 @@ public class Field_Manager : MonoBehaviour {
         //(j - width * 0.5f) * block_scale,(i - height * 0.5f) * block_scale, 1
         Vector3 pos = new Vector3(snake_head.position.x, 
             snake_head.position.y, snake_head.position.z);
-        Transform t1 = Instantiate(tail, pos, snake_head.rotation);
+        Transform t1 = Instantiate(tail, pos, snake_head.rotation,snake_dad);
         Debug.Log(t1.position);
         snake.tail.Insert(0,t1);
         fed = true;
@@ -129,7 +130,7 @@ public class Field_Manager : MonoBehaviour {
                     || j == field.GetLength(1) - 1) {
                     field[i, j] = 9; //wall
                     Instantiate(wall, new Vector3((j - width * 0.5f) * block_scale,
-                        (i - height * 0.5f) * block_scale, 1), Quaternion.identity);
+                        (i - height * 0.5f) * block_scale, 1), Quaternion.identity, wall_parent);
                 }
             }
         }
